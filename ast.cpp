@@ -50,6 +50,25 @@ string Expression::Type()
 }
 
 // --------
+// Automatic-Convertion
+// --------
+
+void Expression::ConvertIntToBool() 
+{
+    if (type == ExprType::INT)
+    {
+        type = ExprType::BOOL;
+        if (token->lexeme == "0")
+        {
+            token->lexeme = "false";
+        }
+        else {
+            token->lexeme = "true";
+        }
+    }
+}
+
+// --------
 // Constant
 // --------
 
@@ -73,6 +92,9 @@ Access::Access(int etype, Token * t, Expression * i, Expression * e): Expression
 
 Logical::Logical(Token *t, Expression *e1, Expression *e2) : Expression(NodeType::LOG, ExprType::BOOL, t), expr1(e1), expr2(e2)
 {
+    expr1->ConvertIntToBool();
+    expr2->ConvertIntToBool();
+
     // verificação de tipos
     if (expr1->type != ExprType::BOOL || expr2->type != ExprType::BOOL)
     {
@@ -124,6 +146,8 @@ Arithmetic::Arithmetic(int etype, Token *t, Expression *e1, Expression *e2) : Ex
 
 UnaryExpr::UnaryExpr(int etype, Token *t, Expression *e) : Expression(NodeType::UNARY, etype, t), expr(e)
 {
+    expr->ConvertIntToBool();
+
     // verificação de tipos
     if (expr->type != ExprType::BOOL)
     {
@@ -146,6 +170,11 @@ Seq::Seq(Statement *s, Statement *ss) : Statement(NodeType::SEQ), stmt(s), stmts
 
 Assign::Assign(Expression *i, Expression *e) : Statement(NodeType::ASSIGN), id(i), expr(e)
 {
+    if (i->type == ExprType::BOOL)
+    {
+        expr->ConvertIntToBool();
+    }
+
     // verificação de tipos
     if (id->type != expr->type)
     {
@@ -161,7 +190,9 @@ Assign::Assign(Expression *i, Expression *e) : Statement(NodeType::ASSIGN), id(i
 // If
 // ----
 
-If::If(Expression *e, Statement *s) : Statement(NodeType::IF_STMT), expr(e), stmt(s) {}
+If::If(Expression *e, Statement *s) : Statement(NodeType::IF_STMT), expr(e), stmt(s) {
+    expr->ConvertIntToBool();
+}
 
 // -----
 // While

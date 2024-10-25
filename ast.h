@@ -52,6 +52,7 @@ struct Expression : public Node
     Expression(int ntype, int etype, Token *t);
     string Name();
     string Type();
+    void ConvertIntToBool();
 };
 
 struct Constant : public Expression
