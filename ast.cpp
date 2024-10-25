@@ -198,10 +198,14 @@ If::If(Expression *e, Statement *s) : Statement(NodeType::IF_STMT), expr(e), stm
 // While
 // -----
 
-While::While(Expression *e, Statement *s) : Statement(NodeType::WHILE_STMT), expr(e), stmt(s) {}
+While::While(Expression *e, Statement *s) : Statement(NodeType::WHILE_STMT), expr(e), stmt(s) {
+    expr->ConvertIntToBool();
+}
 
 // --------
 // Do-While
 // --------
 
-DoWhile::DoWhile(Statement *s, Expression *e) : Statement(NodeType::DOWHILE_STMT), stmt(s), expr(e) {}
+DoWhile::DoWhile(Statement *s, Expression *e) : Statement(NodeType::DOWHILE_STMT), stmt(s), expr(e) {
+    expr->ConvertIntToBool();
+}
